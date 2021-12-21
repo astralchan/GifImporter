@@ -1,4 +1,4 @@
-# ModNameGoesHere
+# GifImport
 
 A [NeosModLoader](https://github.com/zkxs/NeosModLoader) mod for [Neos VR](https://neos.com/) that allows you to essentially import gif images. It converts gifs to a spritesheet then adds the appropriate components.
 
