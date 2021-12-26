@@ -21,7 +21,7 @@ namespace GifImporter
     {
         public override string Name => "GifImporter";
         public override string Author => "amber";
-        public override string Version => "1.0.0";
+        public override string Version => "1.1.1";
         public override string Link => "https://github.com/kawaiiamber/Gif-Import";
         public override void OnEngineInit()
         {
