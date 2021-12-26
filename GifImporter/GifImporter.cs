@@ -36,29 +36,30 @@ namespace GifImporter
             {
                 Uri uri = new Uri(path);
                 Image image = null;
+                bool validGif = false;
                 // Local file import vs URL import
-                if (uri.Scheme == "file")
+                if (uri.Scheme == "file" && Path.GetExtension(path) != ".gif")
                 {
                     image = Image.FromStream(File.OpenRead(path));
+                    validGif = true;
                 }
                 else if (uri.Scheme == "http" || uri.Scheme == "https")
                 {
                     var client = new System.Net.WebClient();
                     image = Image.FromStream(client.OpenRead(uri));
+                    var type = client.ResponseHeaders.Get("content-type");
+                    if(type == "image/gif")
+                    {
+                        validGif = true;
+                    }
                 }
                 /* TODO: Support neosdb links
 				else if (uri.Scheme == "neosdb"){
 					// neosdb handling here
 				} */
-                else
+                if (!validGif)
                 {
-                    // was gonna throw but that breaks the importer so whatever
-                    Error(new ArgumentException($"Unsupported URI Scheme: {uri.Scheme}"));
-                    image.Dispose();
-                    return true;
-                }
-                if (!ImageAnimator.CanAnimate(image))
-                {
+                    Error(new ArgumentException($"Image is not a gif or the URI Scheme {uri.Scheme} is not supported"));
                     image.Dispose();
                     return true;
                 }
