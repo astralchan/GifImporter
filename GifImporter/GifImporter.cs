@@ -21,7 +21,7 @@ namespace GifImporter
     {
         public override string Name => "GifImporter";
         public override string Author => "amber";
-        public override string Version => "1.1.0";
+        public override string Version => "1.0.0";
         public override string Link => "https://github.com/kawaiiamber/Gif-Import";
         public override void OnEngineInit()
         {
@@ -72,8 +72,6 @@ namespace GifImporter
                     float frameDelay = 0;
                     var frameWidth = 0;
                     var frameHeight = 0;
-                    int gifRows = 0;
-                    int gifCols = 0;
                     const int PropertyTagFrameDelay = 0x5100; // https://docs.microsoft.com/en-us/dotnet/api/system.drawing.imaging.propertyitem.id PropertyTagFrameDelay
                     Bitmap spriteSheet = null;
                     string spritePath = Engine.Current.AppPath + @"\nml_mods\tmp_sheet.png";
@@ -89,33 +87,21 @@ namespace GifImporter
                         //Get the times stored in the image
                         var times = image.GetPropertyItem(PropertyTagFrameDelay).Value;
 
-                        // calculate amount of cols and rows
-                        float ratio = (float)frameWidth / frameHeight;
-                        var cols = MathX.Sqrt(frameCount / ratio);
-                        gifRows = MathX.RoundToInt(ratio * cols);
-                        gifCols = MathX.RoundToInt(cols);
-
                         // Create a new image
-                        spriteSheet = new Bitmap(frameWidth * gifCols, frameHeight * gifRows);
+                        spriteSheet = new Bitmap((int)(frameCount * frameWidth), (int)frameHeight);
                         int delay = 0;
                         using (Graphics g = Graphics.FromImage(spriteSheet))
                         {
-                            for (int i = 0; i < gifRows; i++)
+                            for (int i = 0; i < frameCount; i++)
                             {
-                                for(int j = 0; j < gifCols; j++)
-                                {
-                                    if(i * gifCols + j >= frameCount)
-                                    {
-                                        break;
-                                    }
-                                    //convert 4 bit value to integer
-                                    var duration = BitConverter.ToInt32(times, 4 * ((i * gifCols) + j));
-                                    //Set the write frame before we save it
-                                    image.SelectActiveFrame(FrameDimension.Time, i * gifCols + j);
-                                    g.DrawImage(image, frameWidth * j, frameHeight * i);
+                                //convert 4 bit value to integer
+                                var duration = BitConverter.ToInt32(times, 4 * i);
+                                //Set the write frame before we save it
+                                image.SelectActiveFrame(FrameDimension.Time, i);
 
-                                    delay += duration;
-                                }
+                                g.DrawImage(image, frameWidth * i, 0);
+
+                                delay += duration;
                             }
                             frameDelay = 100 / (delay / frameCount);
                         }
@@ -168,7 +154,7 @@ namespace GifImporter
                     UVAtlasAnimator _UVAtlasAnimator = targetSlot.AttachComponent<UVAtlasAnimator>();
                     TimeIntDriver _TimeIntDriver = targetSlot.AttachComponent<TimeIntDriver>();
                     _AtlasInfo.GridFrames.Value = frameCount;
-                    _AtlasInfo.GridSize.Value = new int2(gifCols, gifRows);
+                    _AtlasInfo.GridSize.Value = new int2(frameCount, 1);
                     _TimeIntDriver.Scale.Value = frameDelay;
                     _TimeIntDriver.Repeat.Value = _AtlasInfo.GridFrames.Value;
                     _TimeIntDriver.Target.Target = _UVAtlasAnimator.Frame;
