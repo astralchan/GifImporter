@@ -60,7 +60,7 @@ namespace GifImporter
                 if (!validGif)
                 {
                     Error(new ArgumentException($"Image is not a gif or the URI Scheme {uri.Scheme} is not supported"));
-                    image.Dispose();
+                    image?.Dispose();
                     return true;
                 }
                 __result = targetSlot.StartTask(async delegate ()
