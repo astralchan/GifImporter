@@ -74,7 +74,7 @@ namespace GifImporter
                     var frameHeight = 0;
                     const int PropertyTagFrameDelay = 0x5100; // https://docs.microsoft.com/en-us/dotnet/api/system.drawing.imaging.propertyitem.id PropertyTagFrameDelay
                     Bitmap spriteSheet = null;
-                    string spritePath = Engine.Current.AppPath + @"\nml_mods\tmp_sheet.png";
+                    string spritePath = Path.Combine(Engine.Current.AppPath, "nml_mods", "tmp_sheet.png");
 
                     try
                     {
