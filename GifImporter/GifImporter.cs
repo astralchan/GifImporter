@@ -38,7 +38,7 @@ namespace GifImporter
                 Image image = null;
                 bool validGif = false;
                 // Local file import vs URL import
-                if (uri.Scheme == "file" && Path.GetExtension(path) == ".gif")
+                if (uri.Scheme == "file" && string.Equals(Path.GetExtension(path), ".gif", StringComparison.OrdinalIgnoreCase))
                 {
                     image = Image.FromStream(File.OpenRead(path));
                     validGif = true;
