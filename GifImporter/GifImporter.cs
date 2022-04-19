@@ -21,12 +21,18 @@ namespace GifImporter
     {
         public override string Name => "GifImporter";
         public override string Author => "amber";
-        public override string Version => "1.1.1";
+        public override string Version => "1.1.2";
         public override string Link => "https://github.com/kawaiiamber/GifImporter";
+
+        [AutoRegisterConfigKey]
+        public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>("square_images", "If true the mod will try to make the generated sprite sheets square, otherwise they will be a line.\nEnabling this option will make the gifs have wasted empty space sometimes.", () => false);
+        public static ModConfiguration config;
+
         public override void OnEngineInit()
         {
             Harmony harmony = new Harmony("tk.kawaiiamber.gifimporter");
             harmony.PatchAll();
+            config = GetConfiguration();
         }
 
         [HarmonyPatch(typeof(ImageImporter), "ImportImage")]
@@ -72,6 +78,8 @@ namespace GifImporter
                     float frameDelay = 0;
                     var frameWidth = 0;
                     var frameHeight = 0;
+                    int gifRows = 0;
+                    int gifCols = 0;
                     const int PropertyTagFrameDelay = 0x5100; // https://docs.microsoft.com/en-us/dotnet/api/system.drawing.imaging.propertyitem.id PropertyTagFrameDelay
                     Bitmap spriteSheet = null;
                     string spritePath = Path.Combine(Engine.Current.AppPath, "nml_mods", "tmp_sheet.png");
@@ -87,21 +95,40 @@ namespace GifImporter
                         //Get the times stored in the image
                         var times = image.GetPropertyItem(PropertyTagFrameDelay).Value;
 
+                        if (config.GetValue(KEY_SQUARE))
+                        {
+                            // calculate amount of cols and rows
+                            float ratio = (float)frameWidth / frameHeight;
+                            var cols = MathX.Sqrt(frameCount / ratio);
+                            gifCols = MathX.RoundToInt(cols);
+                            gifRows = frameCount / gifCols + ((frameCount % gifCols != 0) ? 1 : 0);
+                        }
+                        else
+                        {
+                            gifCols = frameCount;
+                            gifRows = 1;
+                        }
+
                         // Create a new image
-                        spriteSheet = new Bitmap((int)(frameCount * frameWidth), (int)frameHeight);
+                        spriteSheet = new Bitmap(frameWidth * gifCols, frameHeight * gifRows);                        
                         int delay = 0;
                         using (Graphics g = Graphics.FromImage(spriteSheet))
                         {
-                            for (int i = 0; i < frameCount; i++)
+                            for (int i = 0; i < gifRows; i++)
                             {
-                                //convert 4 bit value to integer
-                                var duration = BitConverter.ToInt32(times, 4 * i);
-                                //Set the write frame before we save it
-                                image.SelectActiveFrame(FrameDimension.Time, i);
-
-                                g.DrawImage(image, frameWidth * i, 0);
-
-                                delay += duration;
+                                for(int j = 0; j < gifCols; j++)
+                                {
+                                    if(i * gifCols + j >= frameCount)
+                                    {
+                                        break;
+                                    }
+                                    //convert 4 bit value to integer
+                                    var duration = BitConverter.ToInt32(times, 4 * ((i * gifCols) + j));
+                                    //Set the write frame before we save it
+                                    image.SelectActiveFrame(FrameDimension.Time, i * gifCols + j);
+                                    g.DrawImage(image, frameWidth * j, frameHeight * i);
+                                    delay += duration;
+                                }
                             }
                             frameDelay = 100 / (delay / frameCount);
                         }
@@ -154,7 +181,7 @@ namespace GifImporter
                     UVAtlasAnimator _UVAtlasAnimator = targetSlot.AttachComponent<UVAtlasAnimator>();
                     TimeIntDriver _TimeIntDriver = targetSlot.AttachComponent<TimeIntDriver>();
                     _AtlasInfo.GridFrames.Value = frameCount;
-                    _AtlasInfo.GridSize.Value = new int2(frameCount, 1);
+                    _AtlasInfo.GridSize.Value = new int2(gifCols, gifRows);
                     _TimeIntDriver.Scale.Value = frameDelay;
                     _TimeIntDriver.Repeat.Value = _AtlasInfo.GridFrames.Value;
                     _TimeIntDriver.Target.Target = _UVAtlasAnimator.Frame;
