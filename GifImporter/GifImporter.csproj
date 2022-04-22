@@ -6,17 +6,17 @@
     <RootNamespace>GifImporter</RootNamespace>
     <AssemblyTitle>GifImporter</AssemblyTitle>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NeosPath>$(MSBuildThisFileDirectory)NeosVR</NeosPath>
-    <NeosPath Condition="Exists('C:\Program Files (x86)\Steam\steamapps\common\NeosVR\')">C:\Program Files (x86)\Steam\steamapps\common\NeosVR\</NeosPath>
+    <NeosPath Condition="Exists('D:\SteamLibrary\steamapps\common\NeosVR\')">D:\SteamLibrary\steamapps\common\NeosVR\</NeosPath>
     <NeosPath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/NeosVR/')">$(HOME)/.steam/steam/steamapps/common/NeosVR/</NeosPath>
-    <NeosPath Condition="Exists('E:\Programs\Steam\steamapps\common\NeosVR')">E:\Programs\Steam\steamapps\common\NeosVR\</NeosPath>
     <CopyLocal>false</CopyLocal>
     <CopyToMods Condition="'$(CopyToMods)'==''">true</CopyToMods>
     <DebugSymbols Condition="'$(Configuration)'=='Release'">false</DebugSymbols>
     <DebugType Condition="'$(Configuration)'=='Release'">None</DebugType>
+    <BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,5 +42,9 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(CopyToMods)'=='true'">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(NeosPath)nml_mods" />
     <Message Text="Copied $(TargetFileName) to $(NeosPath)nml_mods" Importance="high" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(TargetDir)\$(TargetFileName)&quot; &quot;$(NeosPath)nml_mods&quot;&#xD;&#xA;$(NeosPath)Neos.exe -Screen -LoadAssembly $(NeosPath)Libraries\NeosModLoader.dll" />
   </Target>
 </Project>
