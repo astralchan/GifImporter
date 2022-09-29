@@ -193,6 +193,10 @@ namespace GifImporter
                     UnlitMaterial _UnlitMaterial = targetSlot.GetComponent<UnlitMaterial>();
                     _UVAtlasAnimator.ScaleField.Target = _UnlitMaterial.TextureScale;
                     _UVAtlasAnimator.OffsetField.Target = _UnlitMaterial.TextureOffset;
+
+                    // Set the inventory preview to be cropped to the gif's first frame
+                    ItemTextureThumbnailSource _inventoryPreview = targetSlot.GetComponent<ItemTextureThumbnailSource>();
+                    _inventoryPreview.Crop.Value = new Rect(0, 0, 1f / (float)gifCols, 1f / (float)gifRows);
                 });
 
                 return false;
