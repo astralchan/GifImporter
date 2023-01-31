@@ -26,7 +26,7 @@ namespace GifImporter
 
 		public override void OnEngineInit()
 		{
-			Harmony harmony = new Harmony("tk.kawaiiamber.gifimporter");
+			Harmony harmony = new Harmony("xyz.astralchan.gifimporter");
 			harmony.PatchAll();
 			config = GetConfiguration();
 		}
