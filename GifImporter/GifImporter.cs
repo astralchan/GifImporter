@@ -10,22 +10,15 @@ using System.Drawing;
 
 namespace GifImporter
 {
-    /*
-     * [____CURSOR PARKING LOT_______]
-     * [                             ]
-     * [_____________________________]
-     *  EDIT: this was important when we were in live share
-     * 	Users present at one point: art0007i, sls, amber, dfgHiatus, MilkySenpai
-     */
     public class GifImporter : NeosMod
     {
         public override string Name => "GifImporter";
         public override string Author => "amber";
-        public override string Version => "1.1.2";
-        public override string Link => "https://github.com/kawaiiamber/GifImporter";
+        public override string Version => "1.1.3";
+        public override string Link => "https://github.com/astralchan/GifImporter";
 
         [AutoRegisterConfigKey]
-        public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>("square_images", "If true the mod will try to make the generated sprite sheets square, otherwise they will be a line.\nEnabling this option will make the gifs have wasted empty space sometimes.", () => false);
+        public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>("square_images", "Generate square tiles (sometimes has bigger size)", () => false);
         public static ModConfiguration config;
 
         public override void OnEngineInit()
@@ -44,6 +37,7 @@ namespace GifImporter
                 Image image = null;
                 bool validGif = false;
                 // Local file import vs URL import
+
                 if (uri.Scheme == "file" && string.Equals(Path.GetExtension(path), ".gif", StringComparison.OrdinalIgnoreCase))
                 {
                     image = Image.FromStream(File.OpenRead(path));
@@ -86,18 +80,18 @@ namespace GifImporter
 
                     try
                     {
-
                         frameCount = image.GetFrameCount(FrameDimension.Time);
 
                         FrameDimension frameDimension = new FrameDimension(image.FrameDimensionsList[0]);
                         frameWidth = image.Width;
                         frameHeight = image.Height;
-                        //Get the times stored in the image
+
+                        // Get the times stored in the image
                         var times = image.GetPropertyItem(PropertyTagFrameDelay).Value;
 
                         if (config.GetValue(KEY_SQUARE))
                         {
-                            // calculate amount of cols and rows
+                            // Calculate amount of cols and rows
                             float ratio = (float)frameWidth / frameHeight;
                             var cols = MathX.Sqrt(frameCount / ratio);
                             gifCols = MathX.RoundToInt(cols);
@@ -194,7 +188,7 @@ namespace GifImporter
                     _UVAtlasAnimator.ScaleField.Target = _UnlitMaterial.TextureScale;
                     _UVAtlasAnimator.OffsetField.Target = _UnlitMaterial.TextureOffset;
 
-                    // Set the inventory preview to be cropped to the gif's first frame
+                    // Set inventory preview to first frame
                     ItemTextureThumbnailSource _inventoryPreview = targetSlot.GetComponent<ItemTextureThumbnailSource>();
                     _inventoryPreview.Crop.Value = new Rect(0, 0, 1f / (float)gifCols, 1f / (float)gifRows);
                 });
