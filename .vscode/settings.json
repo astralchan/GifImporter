@@ -1,0 +1,11 @@
+{
+    "editor.insertSpaces": false,
+    "editor.tabSize": 4,
+    "editor.rulers": [159],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#ff0000"
+    },
+    "[csproj]": {
+        "editor.tabSize": 2
+    }
+}
