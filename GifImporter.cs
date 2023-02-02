@@ -101,11 +101,9 @@ public class GifImporter : NeosMod
 					spriteSheet = new Bitmap(frameWidth * gifCols, frameHeight * gifRows);                        
 					int delay = 0;
 					using (Graphics g = Graphics.FromImage(spriteSheet)) {
-						for (int i = 0; i < gifRows; i++) {
-							for(int j = 0; j < gifCols; j++) {
-								if(i * gifCols + j >= frameCount) {
-									break;
-								}
+						for (int i = 0; i < gifRows; i++)
+							for (int j = 0; j < gifCols; j++) {
+								if (i * gifCols + j >= frameCount) break;
 								//convert 4 bit value to integer
 								var duration = BitConverter.ToInt32(times, 4 * ((i * gifCols) + j));
 								//Set the write frame before we save it
@@ -113,7 +111,6 @@ public class GifImporter : NeosMod
 								g.DrawImage(image, frameWidth * j, frameHeight * i);
 								delay += duration;
 							}
-						}
 						frameDelay = 100 / (delay / frameCount);
 					}
 
@@ -148,8 +145,7 @@ public class GifImporter : NeosMod
 					setupScreenshotMetadata);
 				if (projection != 0) {
 					ImageImporter.Create360Sphere(targetSlot, tex, stereoLayout, projection, addCollider);
-				}
-				else {
+				} else {
 					while (!tex.IsAssetAvailable) await default(NextUpdate);
 					ImageImporter.CreateQuad(targetSlot, tex, stereoLayout, addCollider);
 				}
