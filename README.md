@@ -3,6 +3,9 @@
 A [NeosModLoader](https://github.com/zkxs/NeosModLoader) mod for [Neos VR](https://neos.com/) that allows you to
 essentially import gif images. It converts gifs to a spritesheet then adds the appropriate components.
 
+Related issue on [NeosPublic](https://github.com/Neos-Metaverse/NeosPublic/) issue tracker:
+[261](https://github.com/Neos-Metaverse/NeosPublic/issues/261)
+
 ## Note for linux users
 
 Install `libgdiplus` for your distro.
