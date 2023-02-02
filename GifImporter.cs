@@ -56,7 +56,7 @@ public class GifImporter : NeosMod
 				// neosdb handling here
 			} */
 			if (!validGif) {
-				Error(new ArgumentException($"Image is not a gif or the URI Scheme {uri.Scheme} is not supported"));
+				Debug($"{path} is not a gif, returning true");
 				image?.Dispose();
 				return true;
 			}
@@ -73,7 +73,8 @@ public class GifImporter : NeosMod
 				const int PropertyTagFrameDelay = 0x5100;
 				Bitmap? spriteSheet = null;
 				if (!Directory.Exists("nml_mods/GifImporter")) Directory.CreateDirectory("nml_mods/GifImporter");
-				string spritePath = Path.Combine(Engine.Current.AppPath, "nml_mods/GifImporter", "tmp_sheet.png");
+				string spritePath = Path.Combine(Engine.Current.AppPath, "nml_mods/GifImporter",
+					Path.GetFileName(path));
 
 				try {
 					frameCount = image!.GetFrameCount(FrameDimension.Time);
