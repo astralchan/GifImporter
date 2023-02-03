@@ -6,6 +6,18 @@ essentially import gif images. It converts gifs to a spritesheet then adds the a
 Related issue on [NeosPublic](https://github.com/Neos-Metaverse/NeosPublic/) issue tracker:
 [261](https://github.com/Neos-Metaverse/NeosPublic/issues/261)
 
+## Usage
+
+![preview](.img/preview.gif)
+
+Simply import a `gif` image like you would any other image (such as the `gif` above).
+
+## Square tiles
+
+![filesize](.img/filesize.jpg)
+
+As noted in the config, square tiles can sometimes make a bigger size tilesheet.
+
 ## Note for linux users
 
 Install `libgdiplus` for your distro.
