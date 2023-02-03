@@ -72,9 +72,7 @@ public class GifImporter : NeosMod
 				// https://docs.microsoft.com/en-us/dotnet/api/system.drawing.imaging.propertyitem.id PropertyTagFrameDelay
 				const int PropertyTagFrameDelay = 0x5100;
 				Bitmap? spriteSheet = null;
-				if (!Directory.Exists("nml_mods/GifImporter")) Directory.CreateDirectory("nml_mods/GifImporter");
-				string spritePath = Path.Combine(Engine.Current.AppPath, "nml_mods/GifImporter",
-					Path.GetFileName(path));
+				string spritePath = Path.Combine(System.IO.Path.GetTempPath(), Path.GetFileName(path));
 
 				try {
 					frameCount = image!.GetFrameCount(FrameDimension.Time);
@@ -101,16 +99,15 @@ public class GifImporter : NeosMod
 					spriteSheet = new Bitmap(frameWidth * gifCols, frameHeight * gifRows);                        
 					int delay = 0;
 					using (Graphics g = Graphics.FromImage(spriteSheet)) {
-						for (int i = 0; i < gifRows; i++)
-							for (int j = 0; j < gifCols; j++) {
-								if (i * gifCols + j >= frameCount) break;
-								//convert 4 bit value to integer
-								var duration = BitConverter.ToInt32(times, 4 * ((i * gifCols) + j));
-								//Set the write frame before we save it
-								image.SelectActiveFrame(FrameDimension.Time, i * gifCols + j);
-								g.DrawImage(image, frameWidth * j, frameHeight * i);
-								delay += duration;
-							}
+						for (int i = 0; i < gifRows; i++) for (int j = 0; j < gifCols; j++) {
+							if (i * gifCols + j >= frameCount) break;
+							//convert 4 bit value to integer
+							var duration = BitConverter.ToInt32(times, 4 * ((i * gifCols) + j));
+							//Set the write frame before we save it
+							image.SelectActiveFrame(FrameDimension.Time, i * gifCols + j);
+							g.DrawImage(image, frameWidth * j, frameHeight * i);
+							delay += duration;
+						}
 						frameDelay = 100 / (delay / frameCount);
 					}
 
@@ -143,9 +140,9 @@ public class GifImporter : NeosMod
 				tex.URL.Value = localUri;
 				ImageImporter.SetupTextureProxyComponents(targetSlot, tex, stereoLayout, projection,
 					setupScreenshotMetadata);
-				if (projection != 0) {
+				if (projection != 0)
 					ImageImporter.Create360Sphere(targetSlot, tex, stereoLayout, projection, addCollider);
-				} else {
+				else {
 					while (!tex.IsAssetAvailable) await default(NextUpdate);
 					ImageImporter.CreateQuad(targetSlot, tex, stereoLayout, addCollider);
 				}
