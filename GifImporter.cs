@@ -22,7 +22,7 @@ public class GifImporter : NeosMod
 	public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>(
 		"Square spritesheet",
 		"Generate square spritesheet (sometimes has bigger size)",
-		() => true);
+		() => false);
 	public static ModConfiguration? config;
 
 	public override void OnEngineInit() {
@@ -49,7 +49,7 @@ public class GifImporter : NeosMod
 				var client = new System.Net.WebClient();
 				image = Image.FromStream(client.OpenRead(uri));
 				var type = client.ResponseHeaders.Get("content-type");
-				if (type == "image/gif") validGif = true;
+				validGif = type == "image/gif";
 			}
 			/* TODO: Support neosdb links
 			else if (uri.Scheme == "neosdb"){
@@ -108,7 +108,7 @@ public class GifImporter : NeosMod
 							g.DrawImage(image, frameWidth * j, frameHeight * i);
 							delay += duration;
 						}
-						frameDelay = 100 / (delay / frameCount);
+						frameDelay = 100 * frameCount / delay;
 					}
 
 					// Save the image
