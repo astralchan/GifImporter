@@ -2,7 +2,7 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net4.6.2</TargetFramework>
+		<TargetFramework>net462</TargetFramework>
 		<LangVersion>LatestMajor</LangVersion>
 		<Nullable>enable</Nullable>
 		<CopyToMods Condition="'$(CopyToMods)'==''">true</CopyToMods>

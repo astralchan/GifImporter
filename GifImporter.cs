@@ -22,7 +22,7 @@ public class GifImporter : NeosMod
 	public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>(
 		"Square spritesheet",
 		"Generate square spritesheet (sometimes has bigger size)",
-		() => false);
+		() => true);
 	public static ModConfiguration? config;
 
 	public override void OnEngineInit() {
@@ -121,8 +121,7 @@ public class GifImporter : NeosMod
 				Debug($"Image saved as {spritePath}");
 
 				LocalDB localDB = targetSlot.World.Engine.LocalDB;
-				Uri localUri = await
-					localDB.ImportLocalAssetAsync(spritePath,
+				Uri localUri = await localDB.ImportLocalAssetAsync(spritePath,
 					LocalDB.ImportLocation.Copy).ConfigureAwait(continueOnCapturedContext: false);
 
 				File.Delete(spritePath);
