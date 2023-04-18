@@ -15,14 +15,14 @@ public class GifImporter : NeosMod
 {
 	public override string Name    => "GifImporter";
 	public override string Author  => "amber";
-	public override string Version => "1.1.3";
+	public override string Version => "1.1.4";
 	public override string Link    => "https://github.com/astralchan/GifImporter";
 
 	[AutoRegisterConfigKey]
 	public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>(
 		"Square spritesheet",
 		"Generate square spritesheet (sometimes has bigger size)",
-		() => true);
+		() => false);
 	public static ModConfiguration? config;
 
 	public override void OnEngineInit() {

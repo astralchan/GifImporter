@@ -24,7 +24,7 @@ Install `libgdiplus` for your distro.
 
 ## Installation
 1. Install [NeosModLoader](https://github.com/zkxs/NeosModLoader).
-2. Place [GifImporter.dll](https://github.com/astralchan/GifImporter/releases/latest/download/GifImporter.dll) into
+2. Place [GifImporter.dll](https://git.astralchan.xyz/astral/GifImporter/releases/download/1.1.4/GifImporter.dll) into
 your `nml_mods` folder. This folder should be at `C:\Program Files (x86)\Steam\steamapps\common\NeosVR\nml_mods` for a
 default install. You can create it if it's missing, or if you launch the game once with NeosModLoader installed it will
 create the folder for you.
