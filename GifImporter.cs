@@ -11,12 +11,13 @@ using HarmonyLib;
 using NeosModLoader;
 
 namespace GifImporter;
+
 public class GifImporter : NeosMod
 {
 	public override string Name    => "GifImporter";
-	public override string Author  => "amber";
+	public override string Author  => "astral";
 	public override string Version => "1.1.4";
-	public override string Link    => "https://github.com/astralchan/GifImporter";
+	public override string Link    => "https://git.astralchan.xyz/astral/GifImporter";
 
 	[AutoRegisterConfigKey]
 	public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>(
