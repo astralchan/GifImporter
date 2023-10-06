@@ -6,14 +6,15 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing;
 using FrooxEngine;
-using BaseX;
 using HarmonyLib;
-using NeosModLoader;
+using ResoniteModLoader;
+using Elements.Core;
 
 namespace GifImporter;
 
-public class GifImporter : NeosMod
+public class GifImporter : ResoniteMod
 {
+	// Port by LeCloutPanda
 	public override string Name    => "GifImporter";
 	public override string Author  => "astral";
 	public override string Version => "1.1.4";
