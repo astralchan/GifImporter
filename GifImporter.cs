@@ -17,7 +17,7 @@ public class GifImporter : ResoniteMod
 	// Port by LeCloutPanda
 	public override string Name    => "GifImporter";
 	public override string Author  => "astral";
-	public override string Version => "1.1.4";
+	public override string Version => "1.1.5";
 	public override string Link    => "https://git.astralchan.xyz/astral/GifImporter";
 
 	[AutoRegisterConfigKey]

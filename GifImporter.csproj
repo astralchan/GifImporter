@@ -20,13 +20,14 @@
 		<ResonitePath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/Resonite/')">$(HOME)/.steam/steam/steamapps/common/Resonite/</ResonitePath>
 		<!-- windows steam -->
 		<ResonitePath Condition="Exists('C:\Program Files (x86)\Steam\steamapps\common\Resonite\')">C:\Program Files (x86)\Steam\steamapps\common\Resonite\</ResonitePath>
+		<ResonitePath Condition="Exists('D:\SteamLibrary\steamapps\common\Resonite\')">D:\SteamLibrary\steamapps\common\Resonite\</ResonitePath>
 		<!-- windows standalone -->
 		<ResonitePath Condition="Exists('C:\Resonite\app\')">C:\Resonite\app\</ResonitePath>
 	</PropertyGroup>
 	
 	<ItemGroup>
 		<Reference Include="0Harmony">
-			<HintPath>$(ResonitePath)Libraries\0Harmony.dll</HintPath>
+			<HintPath>$(ResonitePath)rml_libs\0Harmony.dll</HintPath>
 		</Reference>
 		<Reference Include="ResoniteModLoader">
 			<HintPath>$(ResonitePath)Libraries\ResoniteModLoader.dll</HintPath>
