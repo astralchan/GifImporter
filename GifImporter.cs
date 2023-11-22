@@ -42,22 +42,24 @@ public class GifImporter : ResoniteMod
 			Image? image = null;
 			bool validGif = false;
 
-			// Local file import vs URL import
-			if (uri.Scheme == "file" && string.Equals(Path.GetExtension(path), ".gif",
+            LocalDB localDB = targetSlot.World.Engine.LocalDB;
+
+            // Local file import vs URL import
+            if (uri.Scheme == "file" && string.Equals(Path.GetExtension(path), ".gif",
 				StringComparison.OrdinalIgnoreCase)) {
 				image = Image.FromStream(File.OpenRead(path));
 				validGif = true;
-			} else if (uri.Scheme == "http" || uri.Scheme == "https") {
-				var client = new System.Net.WebClient();
-				image = Image.FromStream(client.OpenRead(uri));
-				var type = client.ResponseHeaders.Get("content-type");
-				validGif = type == "image/gif";
-			}
-			/* TODO: Support neosdb links
-			else if (uri.Scheme == "neosdb"){
-				// neosdb handling here
-			} */
-			if (!validGif) {
+			} else if (uri.Scheme == "http" || uri.Scheme == "https")
+            {
+                var client = new System.Net.WebClient();
+                image = Image.FromStream(client.OpenRead(uri));
+                var type = client.ResponseHeaders.Get("content-type");
+                validGif = type == "image/gif";
+            }
+			else if (uri.Scheme == "resdb"){
+                validGif = true;
+            }
+            if (!validGif) {
 				Debug($"{path} is not a gif, returning true");
 				image?.Dispose();
 				return true;
@@ -65,6 +67,9 @@ public class GifImporter : ResoniteMod
 			__result = targetSlot.StartTask(async delegate () {
 				await default(ToBackground);
 				// Load the image
+                if (uri.Scheme == "resdb") {
+                    image = Image.FromStream(await localDB.TryOpenAsset(uri));
+                }
 				int frameCount = 0;
 				float frameDelay = 0;
 				var frameWidth = 0;
@@ -74,9 +79,10 @@ public class GifImporter : ResoniteMod
 				// https://docs.microsoft.com/en-us/dotnet/api/system.drawing.imaging.propertyitem.id PropertyTagFrameDelay
 				const int PropertyTagFrameDelay = 0x5100;
 				Bitmap? spriteSheet = null;
-				string spritePath = Path.Combine(System.IO.Path.GetTempPath(), Path.GetFileName(path));
+				string spritePath = Path.Combine(localDB.TemporaryPath, Path.GetFileName(path));
+                
 
-				try {
+                try {
 					frameCount = image!.GetFrameCount(FrameDimension.Time);
 
 					FrameDimension frameDimension = new FrameDimension(image.FrameDimensionsList[0]);
@@ -122,7 +128,7 @@ public class GifImporter : ResoniteMod
 
 				Debug($"Image saved as {spritePath}");
 
-				LocalDB localDB = targetSlot.World.Engine.LocalDB;
+				
 				Uri localUri = await localDB.ImportLocalAssetAsync(spritePath,
 					LocalDB.ImportLocation.Copy).ConfigureAwait(continueOnCapturedContext: false);
 
