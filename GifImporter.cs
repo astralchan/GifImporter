@@ -9,15 +9,16 @@ using FrooxEngine;
 using HarmonyLib;
 using ResoniteModLoader;
 using Elements.Core;
+using FrooxEngine.Store;
 
 namespace GifImporter;
 
 public class GifImporter : ResoniteMod
 {
-	// Port by LeCloutPanda
+	// Ported and update by LeCloutPanda(lecloutpanda.github.io)
 	public override string Name    => "GifImporter";
 	public override string Author  => "astral";
-	public override string Version => "1.1.4";
+	public override string Version => "1.1.5";
 	public override string Link    => "https://git.astralchan.xyz/astral/GifImporter";
 
 	[AutoRegisterConfigKey]
@@ -53,9 +54,9 @@ public class GifImporter : ResoniteMod
 				var type = client.ResponseHeaders.Get("content-type");
 				validGif = type == "image/gif";
 			}
-			/* TODO: Support neosdb links
-			else if (uri.Scheme == "neosdb"){
-				// neosdb handling here
+			/* TODO: Support resdb links
+			else if (uri.Scheme == "resdb"){
+				// resdb handling here
 			} */
 			if (!validGif) {
 				Debug($"{path} is not a gif, returning true");

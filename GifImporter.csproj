@@ -23,7 +23,7 @@
 		<!-- windows standalone -->
 		<ResonitePath Condition="Exists('C:\Resonite\app\')">C:\Resonite\app\</ResonitePath>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<Reference Include="0Harmony">
 			<HintPath>$(ResonitePath)Libraries\0Harmony.dll</HintPath>
@@ -39,6 +39,9 @@
 		</Reference>
 		<Reference Include="FrooxEngine">
 			<HintPath>$(ResonitePath)Resonite_Data\Managed\FrooxEngine.dll</HintPath>
+		</Reference>
+		<Reference Include="FrooxEngine.Store">
+			<HintPath>$(ResonitePath)Resonite_Data\Managed\FrooxEngine.Store.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
