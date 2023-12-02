@@ -15,7 +15,7 @@ namespace GifImporter;
 
 public class GifImporter : ResoniteMod
 {
-	// Ported and update by LeCloutPanda(lecloutpanda.github.io)
+	// Ported and updated by LeCloutPanda(lecloutpanda.github.io)
 	public override string Name    => "GifImporter";
 	public override string Author  => "astral";
 	public override string Version => "1.1.5";
