@@ -1,30 +1,31 @@
-﻿// vim: ts=4 sw=4 noet cc=120
-
-using System;
-using System.Threading.Tasks;
+﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using System.Drawing;
-using FrooxEngine;
+
 using HarmonyLib;
 using ResoniteModLoader;
+
+using FrooxEngine;
+using FrooxEngine.Store;
 using Elements.Core;
+using System.Text;
 
 namespace GifImporter;
 
 public class GifImporter : ResoniteMod
 {
-	// Port by LeCloutPanda
 	public override string Name    => "GifImporter";
 	public override string Author  => "astral";
-	public override string Version => "1.1.5";
-	public override string Link    => "https://git.astralchan.xyz/astral/GifImporter";
+	public override string Version => "1.1.6";
+	public override string Link    => "https://github.com/astralchan/GifImporter";
 
 	[AutoRegisterConfigKey]
 	public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>(
 		"Square spritesheet",
-		"Generate square spritesheet (sometimes has bigger size)",
-		() => false);
+		"Generate square spritesheet",
+		() => true);
 	public static ModConfiguration? config;
 
 	public override void OnEngineInit() {
@@ -45,31 +46,47 @@ public class GifImporter : ResoniteMod
             LocalDB localDB = targetSlot.World.Engine.LocalDB;
 
             // Local file import vs URL import
-            if (uri.Scheme == "file" && string.Equals(Path.GetExtension(path), ".gif",
-				StringComparison.OrdinalIgnoreCase)) {
+            if (uri.Scheme == "file") {
+				// Check file header
+				using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read)) {
+					byte[] headerBytes = new byte[6]; // GIF header is 6 bytes
+					int bytesRead = fs.Read(headerBytes, 0, headerBytes.Length);
+					
+					if (bytesRead != headerBytes.Length)
+						throw new Exception("File too short to be a gif");
+
+					string header = Encoding.ASCII.GetString(headerBytes);
+
+					if (header != "GIF87a" && header != "GIF89a")
+						throw new Exception("Magic number doesn't match GIF magic number");
+					
+					validGif = true;
+				}
 				image = Image.FromStream(File.OpenRead(path));
-				validGif = true;
-			} else if (uri.Scheme == "http" || uri.Scheme == "https")
-            {
+			} else if (uri.Scheme == "http" || uri.Scheme == "https" || uri.Scheme == "resdb") {
                 var client = new System.Net.WebClient();
                 image = Image.FromStream(client.OpenRead(uri));
                 var type = client.ResponseHeaders.Get("content-type");
                 validGif = type == "image/gif";
-            }
-			else if (uri.Scheme == "resdb"){
+            } else if (uri.Scheme == "resdb") {
                 validGif = true;
             }
+
             if (!validGif) {
 				Debug($"{path} is not a gif, returning true");
 				image?.Dispose();
 				return true;
 			}
+
 			__result = targetSlot.StartTask(async delegate () {
 				await default(ToBackground);
+
 				// Load the image
                 if (uri.Scheme == "resdb") {
+					Debug($"Awaiting asset from resdb uri...");
                     image = Image.FromStream(await localDB.TryOpenAsset(uri));
                 }
+
 				int frameCount = 0;
 				float frameDelay = 0;
 				var frameWidth = 0;
@@ -80,7 +97,6 @@ public class GifImporter : ResoniteMod
 				const int PropertyTagFrameDelay = 0x5100;
 				Bitmap? spriteSheet = null;
 				string spritePath = Path.Combine(localDB.TemporaryPath, Path.GetFileName(path));
-                
 
                 try {
 					frameCount = image!.GetFrameCount(FrameDimension.Time);
@@ -107,14 +123,16 @@ public class GifImporter : ResoniteMod
 					spriteSheet = new Bitmap(frameWidth * gifCols, frameHeight * gifRows);                        
 					int delay = 0;
 					using (Graphics g = Graphics.FromImage(spriteSheet)) {
-						for (int i = 0; i < gifRows; i++) for (int j = 0; j < gifCols; j++) {
-							if (i * gifCols + j >= frameCount) break;
-							//convert 4 bit value to integer
-							var duration = BitConverter.ToInt32(times, 4 * ((i * gifCols) + j));
-							//Set the write frame before we save it
-							image.SelectActiveFrame(FrameDimension.Time, i * gifCols + j);
-							g.DrawImage(image, frameWidth * j, frameHeight * i);
-							delay += duration;
+						for (int i = 0; i < gifRows; i++)
+							for (int j = 0; j < gifCols; j++) {
+								if (i * gifCols + j >= frameCount)
+									break;
+								// Convert 4-bit value to integer
+								var duration = BitConverter.ToInt32(times, 4 * ((i * gifCols) + j));
+								// Set the write frame before we save it
+								image.SelectActiveFrame(FrameDimension.Time, i * gifCols + j);
+								g.DrawImage(image, frameWidth * j, frameHeight * i);
+								delay += duration;
 						}
 						frameDelay = 100 * frameCount / delay;
 					}
@@ -127,7 +145,6 @@ public class GifImporter : ResoniteMod
 				}
 
 				Debug($"Image saved as {spritePath}");
-
 				
 				Uri localUri = await localDB.ImportLocalAssetAsync(spritePath,
 					LocalDB.ImportLocation.Copy).ConfigureAwait(continueOnCapturedContext: false);

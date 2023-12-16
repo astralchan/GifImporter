@@ -5,7 +5,7 @@ essentially import gif images. It converts gifs to a spritesheet then adds the a
 
 
 Related issue on [NeosPublic](https://github.com/Neos-Metaverse/NeosPublic/) issue tracker: 
-[261](https://github.com/Neos-Metaverse/NeosPublic/issues/261) *I am keeping this here as it still relates*
+[261](https://github.com/Neos-Metaverse/NeosPublic/issues/261)
 
 ## Usage
 
