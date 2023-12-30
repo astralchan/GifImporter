@@ -21,12 +21,12 @@ public class GifImporter : ResoniteMod
 	public override string Version => "1.1.6";
 	public override string Link    => "https://github.com/astralchan/GifImporter";
 
-	[AutoRegisterConfigKey]
-	public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>(
-		"Square spritesheet",
-		"Generate square spritesheet",
-		() => true);
-	public static ModConfiguration? config;
+    [AutoRegisterConfigKey]
+    public static ModConfigurationKey<bool> KEY_SQUARE = new ModConfigurationKey<bool>(
+        "Square spritesheet",
+        "Generate square spritesheet",
+        () => true);
+    public static ModConfiguration? config;
 
 	public override void OnEngineInit() {
 		Harmony harmony = new Harmony("xyz.astralchan.gifimporter");
@@ -53,12 +53,18 @@ public class GifImporter : ResoniteMod
 					int bytesRead = fs.Read(headerBytes, 0, headerBytes.Length);
 					
 					if (bytesRead != headerBytes.Length)
-						throw new Exception("File too short to be a gif");
+					{
+						Debug("File too short to be a gif");
+						return true;
+					}
 
 					string header = Encoding.ASCII.GetString(headerBytes);
 
 					if (header != "GIF87a" && header != "GIF89a")
-						throw new Exception("Magic number doesn't match GIF magic number");
+                    {
+                        Debug("Magic number doesn't match GIF magic number");
+                        return true;
+                    }
 					
 					validGif = true;
 				}
