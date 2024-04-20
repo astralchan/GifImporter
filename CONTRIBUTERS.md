@@ -1,5 +1,9 @@
 * [art0007i](https://github.com/art0007i)
-Help with making mod and teaching about gif parsing
+
+  Help with making mod and teaching about gif parsing
+
+  Update to 2024 Resonite
+
 * [LeCloutPanda](https://github.com/LeCloutPanda)
 Ported to Resonite
 * [zkxs](https://github.com/zkxs)
