@@ -211,6 +211,7 @@ public class GifImporter : ResoniteMod
                 UnlitMaterial _UnlitMaterial = targetSlot.GetComponent<UnlitMaterial>();
                 _UVAtlasAnimator.ScaleField.Target = _UnlitMaterial.TextureScale;
                 _UVAtlasAnimator.OffsetField.Target = _UnlitMaterial.TextureOffset;
+                _UnlitMaterial.BlendMode.Value = BlendMode.Cutout;
 
                 // Set inventory preview to first frame
                 ItemTextureThumbnailSource _inventoryPreview = targetSlot.GetComponent<ItemTextureThumbnailSource>();
