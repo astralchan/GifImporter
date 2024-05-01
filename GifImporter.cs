@@ -18,7 +18,7 @@ public class GifImporter : ResoniteMod
     {
     public override string Name    => "GifImporter";
     public override string Author  => "astral";
-    public override string Version => "1.1.8";
+    public override string Version => "1.1.9";
     public override string Link    => "https://github.com/astralchan/GifImporter";
 
     [AutoRegisterConfigKey]
@@ -205,8 +205,8 @@ public class GifImporter : ResoniteMod
                 _TimeIntDriver.Target.Target = _UVAtlasAnimator.Frame;
                 _UVAtlasAnimator.AtlasInfo.Target = _AtlasInfo;
 
-                QuadMesh _QuadMesh = targetSlot.GetComponent<QuadMesh>();
-                _QuadMesh.Size.Value = new float2(frameWidth, frameHeight).Normalized;
+                TextureSizeDriver _TextureSizeDriver = targetSlot.GetComponent<TextureSizeDriver>();
+                _TextureSizeDriver.Premultiply.Value = new float2(gifRows, gifCols);
 
                 UnlitMaterial _UnlitMaterial = targetSlot.GetComponent<UnlitMaterial>();
                 _UVAtlasAnimator.ScaleField.Target = _UnlitMaterial.TextureScale;
