@@ -4,8 +4,8 @@
 essentially import gif images. It converts gifs to a spritesheet then adds the appropriate components.
 
 
-Related issue on [NeosPublic](https://github.com/Neos-Metaverse/NeosPublic/) issue tracker: 
-[261](https://github.com/Neos-Metaverse/NeosPublic/issues/261)
+Related issue on [Resonite-Issues](https://github.com/Yellow-Dog-Man/Resonite-Issues/) issue tracker: 
+[#1266](https://github.com/Yellow-Dog-Man/Resonite-Issues/issues/1266)
 
 ## Usage
 
