@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Drawing.Imaging;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 using HarmonyLib;
 using ResoniteModLoader;
+using Renderite.Shared;
+
 
 using FrooxEngine;
 using FrooxEngine.Store;
@@ -18,7 +20,7 @@ public class GifImporter : ResoniteMod
     {
     public override string Name    => "GifImporter";
     public override string Author  => "astral";
-    public override string Version => "1.2.1";
+    public override string Version => "1.2.2";
     public override string Link    => "https://github.com/astralchan/GifImporter";
 
     [AutoRegisterConfigKey]
