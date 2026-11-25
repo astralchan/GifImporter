@@ -5,7 +5,7 @@
   Update to 2024 Resonite
 
 * [LeCloutPanda](https://github.com/LeCloutPanda)
-Ported to Resonite
+Ported to Resonite/Maintainer
 * [zkxs](https://github.com/zkxs)
 Compatibility for unix-like filesystem / etc
 * [Psychpsyo](https://github.com/Psychpsyo)
