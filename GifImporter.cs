@@ -175,7 +175,7 @@ public class GifImporter : ResoniteMod
                     }
 
                     if (setupScreenshotMetadata)
-                        targetSlot.GetComponentInChildren<PhotoMetadata>()?.NotifyOfScreenshot();
+                        targetSlot.GetComponentInChildren<PhotoMetadata>()?.NotifyModified();
 
                     // Attach Atlas & Animator components
                     AtlasInfo atlas = targetSlot.AttachComponent<AtlasInfo>();
